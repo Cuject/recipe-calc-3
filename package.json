@@ -11,8 +11,16 @@
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"autoprefixer": "^10.4.16",
+		"postcss": "^8.4.33",
 		"svelte": "^4.2.7",
+		"tailwindcss": "^3.4.1",
 		"vite": "^5.0.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"js-sha256": "^0.10.1",
+		"mongodb": "^6.3.0",
+		"svelte-chartjs": "^3.1.5"
+	}
 }
