@@ -305,7 +305,7 @@
         grid-column-start: 2;
         grid-row-start: 2;
         border: 5px solid white;
-        border-radius: 25px;
+        border-radius: 25px;            
         padding: 4px;
         display: grid;
     }
