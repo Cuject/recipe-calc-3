@@ -21,7 +21,7 @@
 
 
     async function addRecipe() {
-        const res = await fetch('/api/mongo', {
+        const res = await fetch('/api/fetch/' + String(data.user), {
 			method: 'POST',
 			body: JSON.stringify({
                 append_input: recipe_name_input
@@ -44,7 +44,7 @@
 
     async function editRecipe(index) {
         
-        const res = await fetch('/api/mongo/' + + String(index), {
+        const res = await fetch('/api/fetch/' + String(data.user) + "/" + String(index), {
 			method: 'PATCH',
 			body: JSON.stringify({
                 new_name: edit_name_input
@@ -68,7 +68,7 @@
     }
 
     async function delRecipe(index) {
-        const res = await fetch('/api/mongo' + "/" + String(index), {
+        const res = await fetch('/api/fetch/' + String(data.user) +"/" + String(index), {
 			method: 'DELETE'
 		})
         delPopUp = false

@@ -3,14 +3,16 @@ import { redirect } from '@sveltejs/kit';
 export const load = async (loadEvent) => {
     const { fetch , cookies} = loadEvent;
 
-    const title =  "Recipes List"
-    const response = await fetch('/api/mongo')
-    const recipes = await response.json()
-    
-
     let isAdmin = false;
     let isGuest = false;
     const user = cookies.get("user")
+
+    const title =  "Recipes List"
+    const response = await fetch('/api/fetch/' + String(user))
+    const recipes = await response.json()
+    
+
+    
 
     if (!cookies.get("user")){
         throw redirect(307, '/login') // redirect to auth route when inputting /news on browser tab

@@ -49,7 +49,7 @@ export const actions = {
                 });
             }else if(sha224(email+password) === user_hashes[user_emails.indexOf(email)]){
                 cookies.set("user", email, {path: '/'});
-                user.set(email);
+               //(email);
             }else{
                 return fail(400, {
                     email,
@@ -60,7 +60,7 @@ export const actions = {
         
         
         if (cookies.get("email")){
-            throw redirect(303, '/news'); // Status Code 303 for GET, not POST which is 307
+            throw redirect(303, '/recipes'); // Status Code 303 for GET, not POST which is 307
         } 
 
         return {message: 'Logged in'}
@@ -91,13 +91,13 @@ export const actions = {
         
 
         cookies.set("user", email, {path: '/'});
-        user.set(email)
+       //(email)
         return {message: 'Successfully Registered'}
     },
 
     guest: async ({request, cookies}) => {
         cookies.set("user", "guest", {path: '/'});
-        user.set("guest")
+       //("guest")
         return {message: 'Logged in as Guest'}
     },
 }

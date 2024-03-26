@@ -96,7 +96,7 @@
 
 
     async function addFoodItem() {
-        const res = await fetch('/api/mongo/' + String(recipe_index)  , {
+        const res = await fetch('/api/fetch/' + String(data.user) + "/" + String(recipe_index)  , {
 			method: 'POST',
 			body: JSON.stringify({
                 new_food_item: foodID_input
@@ -256,7 +256,7 @@
         foods_sugars_total += foods_sugars[index]
         foods_sugars_total = foods_sugars_total
 
-        const res = await fetch('/api/mongo/' + String(recipe_index) + "/" + String(index), {
+        const res = await fetch('/api/fetch/' + String(data.user) + "/" + String(recipe_index) + "/" + String(index), {
 			method: 'PATCH',
 			body: JSON.stringify({
                 new_qty: food_qtys[index]
@@ -267,7 +267,7 @@
     }
 
     async function delFoodItem(index) {
-        const res = await fetch('/api/mongo/' + String(recipe_index) + '/' + String(index), {
+        const res = await fetch('/api/fetch/' + String(data.user) + "/" + String(recipe_index) + '/' + String(index), {
 			method: 'DELETE'
 		})
         food_Data.splice(index, 1)

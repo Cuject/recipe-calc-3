@@ -6,26 +6,32 @@ import { user } from "$lib/stores/cookie.js";
 import { cookie } from '@sveltejs/kit';
 
 
-let user_email = "nio@gmail.com";
+//let user_email = "nio@gmail.com";
 
 //user.subscribe(value => {user_email = value;});
 
 
 //=============================================================================================
 
-export async function GET(){
-     //
+export async function GET(RequestEvent){
+    const { params } = RequestEvent;
+    const { user } = params;
+    
     const client = new MongoClient(SECRET_URI)
     const db = client.db(DB_NAME)
-    const recipes = await db.collection('recipes').find({user: user_email}).toArray()
+    const recipes = await db.collection('recipes').find({user: user}).toArray()
 
-    return json({recipes, user: user_email})
+    return json({recipes, user: user})
 }
 
 export async function POST(RequestEvent ){
+
+    const { params } = RequestEvent;
+    const { user } = params;
+
     const client = new MongoClient(SECRET_URI);
     const db = client.db(DB_NAME)
-    const recipes_data = await db.collection("recipes").find({user: user_email}).toArray();
+    const recipes_data = await db.collection("recipes").find({user: user}).toArray();
     const recipes_names = recipes_data.map((recipe_name) => {return recipe_name.name})
 
     const { request } = RequestEvent;
@@ -34,8 +40,8 @@ export async function POST(RequestEvent ){
     if(append_input == "" || recipes_names.includes(append_input)){ 
         return json({message: append_input + " already exists"}, {status: 201});
     }else{
-        db.collection("recipes").insertOne({user:user_email, name:append_input, food_items:[] });
+        db.collection("recipes").insertOne({user:user, name:append_input, food_items:[] });
     }
 
-    return json({user:user_email, name:append_input, food_items:[]}, {status: 201});
+    return json({user:user, name:append_input, food_items:[]}, {status: 201});
 }
