@@ -6,7 +6,6 @@
 
     import AppPdf from "$lib/components/AppPdf.svelte";
     import Page from "$lib/components/Page.svelte";
-    import Chart from "$lib/components/Chart.svelte";
 
     import { createSearchStore, searchHandler } from "$lib/stores/search";
     import { onDestroy } from "svelte";
@@ -363,6 +362,25 @@
     onDestroy(() => { unsubscribe();})
 
 
+    import Chart from "$lib/components/Chart.svelte";
+    import { onMount } from 'svelte';
+
+    let chartComponent;
+
+	
+    function changeChartData(){
+        chartComponent.changeData([
+            foods_water_total,
+            foods_protein_total,
+            foods_total_fat_total,
+            foods_carbohydrates_total,
+            foods_ash_total,
+            foods_fiber_total,
+            foods_sugars_total
+        ])
+    }
+
+
 </script>
 
 {#if addPopUp}
@@ -371,7 +389,7 @@
         <div id="panel">
                 <div class=" bg-blue-100 col-start-2" id="searchBox">
                     <form class=" row-start-2 flex flex-col">
-                        <input type="search" placeholder="Search e.g. 'Corn'" bind:value={$searchStore.search}
+                        <input type="search" placeholder="Search e.g. 'Fish'" bind:value={$searchStore.search}
                         class="border-slate-500 border-2 rounded bg-slate-50 px-2"/>
                     </form>
                     
@@ -380,7 +398,7 @@
                         {#each $searchStore.filtered as i}
                                 {#if food_IDs.includes(i.food_ID)}
                                 <div class=" bg-slate-400 m-1 border-black border-2 px-2 flex justify-between">
-                                <div>{i.food_ND}</div>
+                                <div>{i.food_ND}, ({i.com_Name})</div>
                                 <div>
                                     <button disabled
                                     class=" items-center px-2 py-1 mb-2 text-white bg-slate-500 
@@ -391,7 +409,7 @@
                                 </div>
                                 {:else}
                                 <div class=" bg-white m-1 border-black border-2 px-2 flex justify-between">
-                                <div>{i.food_ND}</div>
+                                <div>{i.food_ND}, ({i.com_Name})</div>
                                 <div>
                                     <button
                                     on:click={()=>{
@@ -427,7 +445,8 @@
     </div>
 {/if}
 
-<div id="debug"> 
+{#if data.isAdmin}
+<div> 
     <button on:click={() => {console.log(new_mod_Data)}}>new_mod_Data</button>
     <button on:click={() => {console.log(mod_food_Data)}}>mod_food_Data</button>
     <button on:click={() => {console.log(food_Data)}}>food_Data</button>
@@ -435,6 +454,7 @@
     
     <button on:click={() => {console.log(foods_water)}}>show totals</button>
 </div>
+{/if}
 
 <div id="grid">
     <div id="wrap">
@@ -442,20 +462,23 @@
             <h1 class=" text-3xl">Recipes List / {recipe_name}</h1>
 
             <div>
-                <input bind:value={foodID_input}  class="border-slate-500 border-2 rounded bg-slate-50 px-2"/>
+                {#if data.isAdmin}
+                    <input bind:value={foodID_input}  class="border-slate-500 border-2 rounded bg-slate-50 px-2"/>
 
-                <button on:click={addFoodItem} class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
-                rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">Add</button>
+                    <button on:click={addFoodItem} class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
+                    rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">Add</button>
+                {/if}
 
-                <button on:click={() => {is_table_view = !is_table_view}}
+                
+                <button on:click={()=>{addPopUp = true}} class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
+                rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">Add a food Item</button>
+                
+
+                <button on:click={() => {is_table_view = !is_table_view;}}
                     class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                     rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">{is_table_view ? "Swith to Chart View" : "Switch to Table View"}</button>
             </div>
             
-            <div>
-                <button on:click={()=>{addPopUp = true}} class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
-                rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">Search</button>
-            </div>
 
             {#if food_IDs.length == 0}
             <h1>"{recipe_name}" is Empty</h1>
@@ -484,7 +507,7 @@
                             {#each new_mod_Data as data, i}
                                 {#if data.visible}
                                     <tr>
-                                        <td><input type="number" step=1 style="width:60px" bind:value={food_qtys[i]} on:change={() => {editFoodItem(i)}}/></td>
+                                        <td><input type="number" step=1 style="width:60px" bind:value={food_qtys[i]} on:change={() => {editFoodItem(i); changeChartData();}}/></td>
                                         <td>{data.food_ID}</td>
                                         <td>{data.food_ND}</td>
                                         <td>{data.com_Name}</td>
@@ -497,7 +520,7 @@
                                         <td>{foods_ash[i].toFixed(1)}</td>
                                         <td>{foods_fiber[i].toFixed(1)}</td>
                                         <td>{foods_sugars[i].toFixed(1)}</td>
-                                        <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible}}
+                                        <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible; changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">{data.visible ? "on" : "off"}</button></td>
 
@@ -505,13 +528,13 @@
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">view</button></td>
 
-                                        <td><button on:click={() => {delFoodItem(i)}}
+                                        <td><button on:click={() => {delFoodItem(i); changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">delete</button></td>
                                     </tr>
                                 {:else}
                                     <tr id="invis">
-                                        <td><input type="number" step=1 style="width:60px" bind:value={food_qtys[i]} on:change={() => {editFoodItem(i)}}/></td>
+                                        <td><input type="number" step=1 style="width:60px" bind:value={food_qtys[i]} on:change={() => {editFoodItem(i); changeChartData();}}/></td>
                                         <td>{data.food_ID}</td>
                                         <td>{data.food_ND}</td>
                                         <td>{data.com_Name}</td>
@@ -524,7 +547,7 @@
                                         <td>{foods_ash[i].toFixed(1)}</td>
                                         <td>{foods_fiber[i].toFixed(1)}</td>
                                         <td>{foods_sugars[i].toFixed(1)}</td>
-                                        <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible}}
+                                        <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible; changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">{data.visible ? "on" : "off"}</button></td>
 
@@ -532,7 +555,7 @@
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">view</button></td>
 
-                                        <td><button on:click={() => {delFoodItem(i)}}
+                                        <td><button on:click={() => {delFoodItem(i); changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">delete</button></td>
                                     </tr>
@@ -542,8 +565,7 @@
                             {/each}
                                 
                             
-                        </table>
-                        <table>
+                        
                             <tr>
                                 <td colspan="5">Total</td>
                                 <td>{foods_water_total.toFixed(1)}</td>
@@ -576,12 +598,12 @@
                             {#each new_mod_Data as data, i}
                                 {#if data.visible}
                                     <tr>
-                                        <td><input type="number" step=1 style="width:60px" bind:value={food_qtys[i]} on:change={editFoodItem(i)}/></td>
+                                        <td><input type="number" step=1 style="width:60px" bind:value={food_qtys[i]} on:change={()=>{editFoodItem(i) ;changeChartData();}}/></td>
                                         <td>{data.food_ID}</td>
                                         <td>{data.food_ND}</td>
                                         <td>{data.com_Name}</td>
                                         <td>{data.edi_Portion}</td>
-                                        <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible}}
+                                        <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible; changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">{data.visible ? "on" : "off"}</button></td>
 
@@ -589,18 +611,18 @@
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">view</button></td>
 
-                                        <td><button on:click={() => {delFoodItem(i)}}
+                                        <td><button on:click={() => {delFoodItem(i); changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">delete</button></td>
                                     </tr>
                                 {:else}
                                     <tr id="invis">
-                                        <td><input type="number" step=0.1 style="width:60px" value={data.qty}/></td>
+                                        <td><input type="number" step=1 style="width:60px" bind:value={food_qtys[i]} on:change={()=>{editFoodItem(i) ;changeChartData();}}/></td>
                                         <td>{data.food_ID}</td>
                                         <td>{data.food_ND}</td>
                                         <td>{data.com_Name}</td>
                                         <td>{data.edi_Portion}</td>
-                                        <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible}}
+                                        <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible; changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">{data.visible ? "on" : "off"}</button></td>
 
@@ -608,7 +630,7 @@
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">view</button></td>
 
-                                        <td><button on:click={() => {delFoodItem(i)}}
+                                        <td><button on:click={() => {delFoodItem(i); changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">delete</button></td>
                                     </tr>
@@ -617,7 +639,7 @@
                                 
                             {/each}
                                 
-                            <tr style="display:none;">
+                            <tr >
                                 <td>Total</td>
                                 <td>{foods_water_total.toFixed(1)}</td>
                                 <td>{foods_energy_total.toFixed(1)}</td>
@@ -630,19 +652,22 @@
                             </tr>
                         </table>
                     </div>
+
+                    <button>
+                        download
+                    </button>
                     
                     <AppPdf bind:print={print}>
                         <Page>
-                        <div id="chart">
-                            <Chart 
-                            water = {foods_water_total}
-                            protein = {foods_protein_total}
-                            fat = {foods_total_fat_total}
-                            carb = {foods_carbohydrates_total}
-                            ash = {foods_ash_total}
-                            fiber = {foods_fiber_total}
-                            sugar = {foods_sugars_total}
-                            
+                        <div id="chart" class=" h-80 w-80">
+                            <Chart bind:this={chartComponent}
+                            water={foods_water_total}
+                            protein={foods_protein_total}
+                            fat={foods_total_fat_total}
+                            carb={foods_carbohydrates_total}
+                            ash={foods_ash_total}
+                            fiber={foods_fiber_total}
+                            sugar={foods_sugars_total}
                             />
                         </div>
                         </Page>

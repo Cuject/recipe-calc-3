@@ -1,14 +1,14 @@
 <script>
   import { Pie } from 'svelte-chartjs';
-  /*export let water   = 1;
+  export let water   = 1;
   export let protein = 2;
   export let fat     = 3;
   export let carb    = 4;
   export let ash     = 5;
   export let fiber   = 6;
-  export let sugar   = 7;*/
+  export let sugar   = 7;
 
-  let listData = [1, 2, 3, 4];
+  let listData = [water, protein, fat, carb, ash, fiber, sugar];
 
 
   const data = {
