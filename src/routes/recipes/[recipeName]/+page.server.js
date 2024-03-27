@@ -45,3 +45,12 @@ export const load = async (loadEvent) => {
         user
     }
 }
+
+export const actions = {
+    log_out: async ({request, cookies}) => {
+        cookies.set("user", "", {path: '/', expires: new Date(0)});
+
+        throw redirect(303, '/login')
+        //console.log("I mean it's working")
+    }
+}

@@ -178,32 +178,42 @@
     </div>
 {/if}
 
+<div class=" fixed top-0 bg-emerald-600 w-full h-14 flex justify-between">
+
+    <div><h1 class=" text-white">Logged In as {data.user}</h1></div>
+    <div>
+        <form method="post" action="?/log_out">
+            <button type="submit"
+            class=" text-white"> Log Out </button>
+        </form>
+        <button on:click={() => {goto('/fct')}}
+            class="text-white">FCT</button>
+    </div> 
+</div>
 
 <div id="grid">
     <div id="wrap">
         <div id="container">
-            <h1>{data.title}</h1>
-            <h1>Logged In as {data.user}</h1>
-            <div >
-                <button on:click={() => {addPopUp = true}} id="addBtn"
-                    class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
+                <div>
+                    <h1 class=" text-3xl">{data.title}</h1>
+                    <button on:click={() => {addPopUp = true}} id="addBtn"
+                        class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                 rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">Add Recipe</button>
-
-                <form method="post" action="?/log_out">
-                    <button type="submit"
-                    class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
-                    rounded-md hover:bg-green-400 sm:w-auto sm:mb-0"> Log Out </button>
-                </form>
-            </div>
+                    
+                    
+                    
+                </div>
+           
+            
             <div style="display: none;">
                 <input bind:value={recipe_name_input}/>
                 <button on:click={addRecipe}>Add</button>
                 <button on:click={() => {isPopUp = true}}>PopUp</button>
                 <button on:click={() => {addPopUp = true}}>AddPopUp</button>
             </div>
-            <div id="recipes" >
+            <div id="recipes" class=" rounded-lg">
                 {#each recipes_names as recipe, i}
-                    <div id="recipe">
+                    <div id="recipe" class=" rounded-lg">
                         <!-- svelte-ignore a11y-no-static-element-interactions -->
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <div id="recipe_btn" on:click={() => {food_ITEMS(recipes_names[i])}}>
@@ -220,9 +230,7 @@
                     </div>
                 {/each}
             </div>
-            <button on:click={() => {goto('/fct')}}
-                class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
-                rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">FCT</button>
+            
         </div>
     </div>
 
@@ -278,7 +286,7 @@
         grid-column-start: 2;
 
         border-radius: 25px;
-        background-color: red;
+        background-color: white;
         border: 4px solid #71C49C;
 
         gap: 2px;
@@ -321,13 +329,12 @@
     }
 
     #recipes{
-        height: 250px;
+        height: 300px;
         overflow: auto;
         margin-top: 10px;
         margin-bottom: 10px;
         padding: 5px;
         border: 4px solid #71C49C;
-        border-radius: 0px;
     }
 
     #recipe{

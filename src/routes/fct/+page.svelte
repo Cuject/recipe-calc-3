@@ -11,10 +11,6 @@
         <div id="wrap">
             <div id="container">
                 <h1>"Food Composition Tables"</h1>
-    
-                <button on:click={() => {console.log(data.fct[0].FA_poly)}}
-                    class=" items-center px-6 py-3 mb-2 text-white bg-green-500 
-                    rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">print json</button>
 
                 <button on:click={() => {goto('/recipes')}}
                     class=" items-center px-6 py-3 mb-2 text-white bg-green-500 

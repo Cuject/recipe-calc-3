@@ -456,6 +456,18 @@
 </div>
 {/if}
 
+<div class=" absolute top-0 bg-emerald-600 w-full h-14 flex justify-between">
+    <div class=" z-10"><h1 class=" text-white">Logged In as {data.user}</h1></div>
+    <div class=" z-10">
+        <form method="post" action="?/log_out">
+            <button type="submit"
+            class=" text-white"> Log Out </button>
+        </form>
+        <button on:click={() => {goto('/fct')}}
+            class="text-white">FCT</button>
+    </div> 
+</div>
+
 <div id="grid">
     <div id="wrap">
         <div id="container">
@@ -590,7 +602,6 @@
                                 <td>food ID</td>
                                 <td>Food name and Description</td>
                                 <td>Common Name</td>
-                                <td>Edible Portion (%)</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -602,7 +613,6 @@
                                         <td>{data.food_ID}</td>
                                         <td>{data.food_ND}</td>
                                         <td>{data.com_Name}</td>
-                                        <td>{data.edi_Portion}</td>
                                         <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible; changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">{data.visible ? "on" : "off"}</button></td>
@@ -621,7 +631,6 @@
                                         <td>{data.food_ID}</td>
                                         <td>{data.food_ND}</td>
                                         <td>{data.com_Name}</td>
-                                        <td>{data.edi_Portion}</td>
                                         <td><button on:click={() => {visible(i, data.visible);data.visible = !data.visible; changeChartData();}}
                                             class=" items-center px-2 py-1 mb-2 text-white bg-green-500 
                                             rounded-md hover:bg-green-400 sm:w-auto sm:mb-0">{data.visible ? "on" : "off"}</button></td>
@@ -639,6 +648,7 @@
                                 
                             {/each}
                                 
+                            {#if data.isAdmin}
                             <tr >
                                 <td>Total</td>
                                 <td>{foods_water_total.toFixed(1)}</td>
@@ -650,12 +660,9 @@
                                 <td>{foods_fiber_total.toFixed(1)}</td>
                                 <td>{foods_sugars_total.toFixed(1)}</td>
                             </tr>
+                            {/if}
                         </table>
                     </div>
-
-                    <button>
-                        download
-                    </button>
                     
                     <AppPdf bind:print={print}>
                         <Page>
