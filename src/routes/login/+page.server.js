@@ -5,7 +5,6 @@ import { json } from "@sveltejs/kit";
 import {MongoClient} from 'mongodb';
 import { SECRET_URI, DB_NAME } from '$env/static/private';
 
-import { user } from "$lib/stores/cookie.js";
 
 let client;
 let db;
